@@ -33,7 +33,7 @@ public class Customer implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "type")
-    private CustomerTypes type;
+    private CustomerType type;
 
     public Integer getCustomerId() {
         return customerId;
@@ -75,11 +75,11 @@ public class Customer implements Serializable {
         this.modifiedWhen = modifiedWhen;
     }
 
-    public CustomerTypes getType() {
+    public CustomerType getType() {
         return type;
     }
 
-    public void setType(CustomerTypes type) {
+    public void setType(CustomerType type) {
         this.type = type;
     }
 

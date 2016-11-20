@@ -1,23 +1,24 @@
 package by.netcracker.test.vad.customers.client;
 
+import by.netcracker.test.vad.customers.shared.CustomerType;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-public interface CustomerTypesServiceAsync
+public interface CustomerTypeServiceAsync
 {
 
     /**
      * GWT-RPC service  asynchronous (client-side) interface
-     * @see by.netcracker.test.vad.customers.client.CustomerTypesService
+     * @see CustomerTypeService
      */
-    void findOne( java.lang.Integer id, AsyncCallback<by.netcracker.test.vad.customers.shared.CustomerTypes> callback );
+    void findOne( java.lang.Integer id, AsyncCallback<CustomerType> callback );
 
 
     /**
      * GWT-RPC service  asynchronous (client-side) interface
-     * @see by.netcracker.test.vad.customers.client.CustomerTypesService
+     * @see CustomerTypeService
      */
-    void findAll( AsyncCallback<java.util.List<by.netcracker.test.vad.customers.shared.CustomerTypes>> callback );
+    void findAll( AsyncCallback<java.util.List<CustomerType>> callback );
 
 
     /**
@@ -25,13 +26,13 @@ public interface CustomerTypesServiceAsync
      */
     public static final class Util 
     { 
-        private static CustomerTypesServiceAsync instance;
+        private static CustomerTypeServiceAsync instance;
 
-        public static final CustomerTypesServiceAsync getInstance()
+        public static final CustomerTypeServiceAsync getInstance()
         {
             if ( instance == null )
             {
-                instance = (CustomerTypesServiceAsync) GWT.create( CustomerTypesService.class );
+                instance = (CustomerTypeServiceAsync) GWT.create( CustomerTypeService.class );
             }
             return instance;
         }

@@ -8,9 +8,10 @@ import com.google.gwt.user.client.ui.RootPanel;
 public class CustomerEntryPoint implements EntryPoint {
 
   public void onModuleLoad() {
-    CustomerServiceAsync rpcService = GWT.create(CustomerService.class);
+    CustomerServiceAsync rpcCustomerService = GWT.create(CustomerService.class);
+    CustomerTypeServiceAsync rpcCustomerTypeService = GWT.create(CustomerTypeService.class);
     HandlerManager eventBus = new HandlerManager(null);
-    AppController appViewer = new AppController(rpcService, eventBus);
+    AppController appViewer = new AppController(rpcCustomerService, rpcCustomerTypeService, eventBus);
     appViewer.go(RootPanel.get());
   }
 }

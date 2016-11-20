@@ -5,5 +5,6 @@
 
   <!-- Specify the path to any remote services.                   -->
   <servlet path="/customers/customerService" class="by.netcracker.test.vad.customers.server.CustomerServiceImpl" />
+  <servlet path="/customers/customerTypeService" class="by.netcracker.test.vad.customers.server.CustomerTypeServiceImpl" />
 
 </module>

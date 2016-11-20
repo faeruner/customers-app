@@ -1,15 +1,15 @@
 package by.netcracker.test.vad.customers.client;
 
-import by.netcracker.test.vad.customers.shared.CustomerTypes;
+import by.netcracker.test.vad.customers.shared.CustomerType;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 import java.util.List;
 
 @RemoteServiceRelativePath("customerTypeService")
-public interface CustomerTypesService  extends RemoteService {
+public interface CustomerTypeService extends RemoteService {
 
-    CustomerTypes findOne(Integer id);
+    CustomerType findOne(Integer id);
 
-    List<CustomerTypes> findAll();
+    List<CustomerType> findAll();
 }

@@ -14,12 +14,14 @@ import com.google.gwt.user.client.ui.HasWidgets;
 
 public class AppController implements Presenter, ValueChangeHandler<String> {
   private final HandlerManager eventBus;
-  private final CustomerServiceAsync rpcService;
+  private final CustomerServiceAsync rpcCustomerService;
+  private final CustomerTypeServiceAsync rpcCustomerTypeService;
   private HasWidgets container;
   
-  public AppController(CustomerServiceAsync rpcService, HandlerManager eventBus) {
+  public AppController(CustomerServiceAsync rpcCustomerService, CustomerTypeServiceAsync rpcCustomerTypeService, HandlerManager eventBus) {
     this.eventBus = eventBus;
-    this.rpcService = rpcService;
+    this.rpcCustomerService = rpcCustomerService;
+    this.rpcCustomerTypeService = rpcCustomerTypeService;
     bind();
   }
   
@@ -61,7 +63,7 @@ public class AppController implements Presenter, ValueChangeHandler<String> {
   
   private void doEditCustomer(Integer id) {
     History.newItem("edit", false);
-    Presenter presenter = new EditCustomerPresenter(rpcService, eventBus, new EditCustomerView(), id);
+    Presenter presenter = new EditCustomerPresenter(rpcCustomerService, rpcCustomerTypeService, eventBus, new EditCustomerView(), id);
     presenter.go(container);
   }
   
@@ -91,13 +93,13 @@ public class AppController implements Presenter, ValueChangeHandler<String> {
       Presenter presenter = null;
 
       if (token.equals("list")) {
-        presenter = new CustomerPresenter(rpcService, eventBus, new CustomerView());
+        presenter = new CustomerPresenter(rpcCustomerService, eventBus, new CustomerView());
       }
       else if (token.equals("add")) {
-        presenter = new EditCustomerPresenter(rpcService, eventBus, new EditCustomerView());
+        presenter = new EditCustomerPresenter(rpcCustomerService, rpcCustomerTypeService, eventBus, new EditCustomerView());
       }
       else if (token.equals("edit")) {
-        presenter = new EditCustomerPresenter(rpcService, eventBus, new EditCustomerView());
+        presenter = new EditCustomerPresenter(rpcCustomerService, rpcCustomerTypeService, eventBus, new EditCustomerView());
       }
       
       if (presenter != null) {
