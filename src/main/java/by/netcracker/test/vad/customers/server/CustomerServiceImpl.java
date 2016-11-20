@@ -29,6 +29,10 @@ public class CustomerServiceImpl implements CustomerService {
         return customerRepository.findOne(id);
     }
 
+    public List<Customer> findByFirstName (String str) {
+        return customerRepository.findByFirstNameLike("%" + str + "%");
+    }
+
     public List<Customer> findPage(Integer pageNumber, Integer pageSize) {
         Pageable page = new PageRequest(pageNumber, pageSize);
         Page<Customer> resultPage = customerRepository.findAll(page);
@@ -51,5 +55,9 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional
     public Customer save(Customer entity) {
         return customerRepository.save(entity);
+    }
+
+    public Customer find(String str) {
+        return null;
     }
 }

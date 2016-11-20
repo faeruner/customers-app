@@ -3,15 +3,7 @@ package by.netcracker.test.vad.customers.client.view;
 import by.netcracker.test.vad.customers.client.presenter.CustomerPresenter;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.DecoratorPanel;
-import com.google.gwt.user.client.ui.DockPanel;
-import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.HTMLTable;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +11,8 @@ import java.util.List;
 public class CustomerView extends Composite implements CustomerPresenter.Display {
   private final Button addButton;
   private final Button deleteButton;
+  private final Button findButton;
+  private final TextBox findText;
   private FlexTable customerTable;
   private final FlexTable contentTable;
   
@@ -44,6 +38,10 @@ public class CustomerView extends Composite implements CustomerPresenter.Display
     hPanel.add(addButton);
     deleteButton = new Button("Delete");
     hPanel.add(deleteButton);
+    findText = new TextBox();
+    hPanel.add(findText);
+    findButton = new Button("Find");
+    hPanel.add(findButton);
     contentTable.getCellFormatter().addStyleName(0, 0, "contacts-ListMenu");
     contentTable.setWidget(0, 0, hPanel);
     
@@ -70,6 +68,11 @@ public class CustomerView extends Composite implements CustomerPresenter.Display
   
   public HasClickHandlers getList() {
     return customerTable;
+  }
+
+  @Override
+  public HasClickHandlers getFindButton() {
+    return findButton;
   }
 
   public void setData(List<String> data) {
