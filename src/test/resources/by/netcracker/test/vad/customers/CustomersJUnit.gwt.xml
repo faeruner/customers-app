@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module rename-to="Customers">
+  <!-- Inherit our applications main module.                      -->
+  <inherits name='by.netcracker.test.vad.customers.Customers' />
+
+  <!-- Specify the path to any remote services.                   -->
+  <servlet path="/customers/customerService" class="by.netcracker.test.vad.customers.server.CustomerServiceImpl" />
+
+</module>
