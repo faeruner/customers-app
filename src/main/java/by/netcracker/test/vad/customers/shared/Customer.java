@@ -1,6 +1,8 @@
 package by.netcracker.test.vad.customers.shared;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -14,19 +16,25 @@ public class Customer implements Serializable {
     private Integer customerId;
 
     @Column(name = "title")
+    @NotNull
+    @Size(min = 2, message = "Name must be at least 2 characters long.")
     private String title;
 
     @Column(name = "first_name")
+    @NotNull
+    @Size(min = 2, message = "Name must be at least 2 characters long.")
     private String firstName;
 
-//    @Column
-//    private String firstNameMetaphone;
+    @Column(name = "first_name_metaphone")
+    private String firstNameMetaphone;
 
     @Column(name = "last_name")
+    @NotNull
+    @Size(min = 2, message = "Name must be at least 2 characters long.")
     private String lastName;
 
-//    @Column
-//    private String lastNameMetaphone;
+    @Column(name = "last_name_metaphone")
+    private String lastNameMetaphone;
 
     @Column(name = "modified_when")
     private Date modifiedWhen;
@@ -37,10 +45,6 @@ public class Customer implements Serializable {
 
     public Integer getCustomerId() {
         return customerId;
-    }
-
-    public void setCustomerId(Integer customerId) {
-        this.customerId = customerId;
     }
 
     public String getTitle() {
@@ -83,8 +87,23 @@ public class Customer implements Serializable {
         this.type = type;
     }
 
-    public String getDisplayName()
-    {
-        return getFirstName() + " " + getLastName();
+    public String getFirstNameMetaphone() {
+        return firstNameMetaphone;
+    }
+
+    public void setFirstNameMetaphone(String firstNameMetaphone) {
+        this.firstNameMetaphone = firstNameMetaphone;
+    }
+
+    public String getLastNameMetaphone() {
+        return lastNameMetaphone;
+    }
+
+    public void setLastNameMetaphone(String lastNameMetaphone) {
+        this.lastNameMetaphone = lastNameMetaphone;
+    }
+
+    public void setCustomerId(Integer customerId) {
+        this.customerId = customerId;
     }
 }

@@ -45,7 +45,7 @@ public interface CustomerServiceAsync
      * GWT-RPC service  asynchronous (client-side) interface
      * @see by.netcracker.test.vad.customers.client.CustomerService
      */
-    void findByFirstName( java.lang.String str, AsyncCallback<java.util.List<by.netcracker.test.vad.customers.shared.Customer>> callback );
+    void findByName(java.lang.String str, AsyncCallback<java.util.List<by.netcracker.test.vad.customers.shared.Customer>> callback );
 
 
     /**

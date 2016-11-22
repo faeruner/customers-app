@@ -26,7 +26,7 @@
         <aspectj.version>1.8.4</aspectj.version>
         <cglib.version>3.1</cglib.version>
         <log4j.version>1.2.17</log4j.version>
-        <slf4j.version>1.5.6</slf4j.version>
+        <slf4j.version>1.7.21</slf4j.version>
         <jackson.version>2.8.4</jackson.version>
         <tiles.version>3.0.7</tiles.version>
         <spring4gwt.version>0.0.1</spring4gwt.version>
@@ -35,6 +35,11 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version>5.3.2.Final</version>
+            </dependency>
             <dependency>
                 <groupId>com.google.gwt</groupId>
                 <artifactId>gwt</artifactId>
@@ -113,13 +118,18 @@
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
-            <version>1.7.21</version>
+            <version>${slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <version>1.7.21</version>
+            <version>${slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -180,11 +190,6 @@
             <groupId>xml-apis</groupId>
             <artifactId>xml-apis</artifactId>
             <version>1.4.01</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code</groupId>
-            <artifactId>spring4gwt</artifactId>
-            <version>${spring4gwt.version}</version>
         </dependency>
     </dependencies>
 

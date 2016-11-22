@@ -1,0 +1,12 @@
+tmp
+.classpath
+.project
+.idea
+.checkstyle
+build
+target
+bin
+.settings
+out
+/build
+/target/

@@ -22,6 +22,6 @@ public interface CustomerService extends RemoteService {
 
     Customer save(Customer entity);
 
-    List<Customer> findByFirstName(String str);
+    List<Customer> findByName(String str);
 
 }

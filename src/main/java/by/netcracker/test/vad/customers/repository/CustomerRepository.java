@@ -7,5 +7,7 @@ import java.util.List;
 
 public interface CustomerRepository extends PagingAndSortingRepository<Customer, Integer> {
 
-    List<Customer> findByFirstNameLike(String name);
+    List<Customer> findTop20ByFirstNameMetaphoneLikeOrLastNameMetaphoneLikeOrderByModifiedWhenDesc(String firstName, String lastName);
+
+    List<Customer> findTop10ByOrderByModifiedWhenDesc();
 }

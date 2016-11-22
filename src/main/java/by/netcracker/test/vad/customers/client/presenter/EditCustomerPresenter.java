@@ -6,15 +6,13 @@ import by.netcracker.test.vad.customers.client.event.CustomerUpdatedEvent;
 import by.netcracker.test.vad.customers.client.event.EditCustomerCancelledEvent;
 import by.netcracker.test.vad.customers.shared.Customer;
 import by.netcracker.test.vad.customers.shared.CustomerType;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.client.Window;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,11 +26,17 @@ public class EditCustomerPresenter implements Presenter {
 
         HasClickHandlers getCancelButton();
 
+        HasValue<String> getCustomerTitle();
+
+        void setTitleHelp(String help);
+
         HasValue<String> getFirstName();
+
+        void setFirstNameHelp(String help);
 
         HasValue<String> getLastName();
 
-        HasValue<String> getCustomerTitle();
+        void setLastNameHelp(String help);
 
         HasValue<Date> getCustomerModifiedWhen();
 
@@ -73,9 +77,9 @@ public class EditCustomerPresenter implements Presenter {
         rpcCustomerService.findOne(id, new AsyncCallback<Customer>() {
             public void onSuccess(Customer result) {
                 customer = result;
-                EditCustomerPresenter.this.display.getFirstName().setValue(customer.getFirstName());
-                EditCustomerPresenter.this.display.getLastName().setValue(customer.getLastName());
-                EditCustomerPresenter.this.display.getCustomerTitle().setValue(customer.getTitle());
+                EditCustomerPresenter.this.display.getCustomerTitle().setValue(customer.getTitle(), true);
+                EditCustomerPresenter.this.display.getFirstName().setValue(customer.getFirstName(), true);
+                EditCustomerPresenter.this.display.getLastName().setValue(customer.getLastName(), true);
                 EditCustomerPresenter.this.display.getCustomerModifiedWhen().setValue(customer.getModifiedWhen());
                 EditCustomerPresenter.this.display.setSelectedType(customer.getType().getCustomerTypeCaption());
             }
@@ -88,17 +92,11 @@ public class EditCustomerPresenter implements Presenter {
     }
 
     public void bind() {
-        this.display.getSaveButton().addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                doSave();
-            }
-        });
-
-        this.display.getCancelButton().addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                eventBus.fireEvent(new EditCustomerCancelledEvent());
-            }
-        });
+        this.display.getSaveButton().addClickHandler(event -> doSave());
+        this.display.getCancelButton().addClickHandler(event -> eventBus.fireEvent(new EditCustomerCancelledEvent()));
+        this.display.getCustomerTitle().addValueChangeHandler(valueChangeEvent -> EditCustomerPresenter.this.display.setTitleHelp(validate(valueChangeEvent.getValue())));
+        this.display.getFirstName().addValueChangeHandler(valueChangeEvent -> EditCustomerPresenter.this.display.setFirstNameHelp(validate(valueChangeEvent.getValue())));
+        this.display.getLastName().addValueChangeHandler(valueChangeEvent -> EditCustomerPresenter.this.display.setLastNameHelp(validate(valueChangeEvent.getValue())));
     }
 
     public void go(final HasWidgets container) {
@@ -107,14 +105,23 @@ public class EditCustomerPresenter implements Presenter {
     }
 
     private void doSave() {
+
+        if (!validate(display.getCustomerTitle().getValue(),
+                display.getFirstName().getValue(),
+                display.getLastName().getValue()).isEmpty()) return;
+
+        customer.setTitle(display.getCustomerTitle().getValue());
         customer.setFirstName(display.getFirstName().getValue());
         customer.setLastName(display.getLastName().getValue());
-        customer.setTitle(display.getCustomerTitle().getValue());
         customer.setModifiedWhen(display.getCustomerModifiedWhen().getValue());
 
         String type = display.getSelectedType();
 
-        typesList.forEach(item -> {if(item.getCustomerTypeCaption().equals(type)){customer.setType(item);}});
+        typesList.forEach(item -> {
+            if (item.getCustomerTypeCaption().equals(type)) {
+                customer.setType(item);
+            }
+        });
 
         rpcCustomerService.save(customer, new AsyncCallback<Customer>() {
             public void onSuccess(Customer result) {
@@ -127,13 +134,12 @@ public class EditCustomerPresenter implements Presenter {
         });
     }
 
-    private void fillCustomerType()
-    {
+    private void fillCustomerType() {
         rpcTypeService.findAll(new AsyncCallback<List<CustomerType>>() {
             public void onSuccess(List<CustomerType> result) {
                 typesList = result;
                 List<String> data = new ArrayList<>();
-                result.forEach(item-> data.add(item.getCustomerTypeCaption()));
+                result.forEach(item -> data.add(item.getCustomerTypeCaption()));
                 EditCustomerPresenter.this.display.setTypes(data);
             }
 
@@ -142,6 +148,21 @@ public class EditCustomerPresenter implements Presenter {
             }
         });
 
+    }
+
+    private String validate(String... input) {
+        String help = "";
+        for (String t : input) {
+            if (t == null || t.trim().equals("")) {
+                help = "Value is empty!";
+                break;
+            } else if (!t.matches("^[- a-zA-Z]*$")) {
+                help = "Only letters is allowed!";
+                break;
+            }
+        }
+
+        return help;
     }
 
 }

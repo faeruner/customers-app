@@ -4,16 +4,13 @@ import by.netcracker.test.vad.customers.client.CustomerServiceAsync;
 import by.netcracker.test.vad.customers.client.event.AddCustomerEvent;
 import by.netcracker.test.vad.customers.client.event.EditCustomerEvent;
 import by.netcracker.test.vad.customers.shared.Customer;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,17 +22,17 @@ public class CustomerPresenter implements Presenter {
     public interface Display {
         HasClickHandlers getAddButton();
 
-        HasClickHandlers getDeleteButton();
+        HasClickHandlers getEditButton();
 
-        HasClickHandlers getList();
+        HasClickHandlers getDeleteButton();
 
         HasClickHandlers getFindButton();
 
-        void setData(List<String> data);
+        HasValue<String> getFindText();
 
-        int getClickedRow(ClickEvent event);
+        void setData(List<Customer> data);
 
-        List<Integer> getSelectedRows();
+        Customer getSelectedRow();
 
         Widget asWidget();
     }
@@ -51,74 +48,36 @@ public class CustomerPresenter implements Presenter {
     }
 
     public void bind() {
-        display.getAddButton().addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                eventBus.fireEvent(new AddCustomerEvent());
+        display.getAddButton().addClickHandler(event -> eventBus.fireEvent(new AddCustomerEvent()));
+        display.getEditButton().addClickHandler(event -> {
+            Customer selected = display.getSelectedRow();
+            if (selected != null) {
+                Integer id = selected.getCustomerId();
+                eventBus.fireEvent(new EditCustomerEvent(id));
             }
         });
 
-        display.getDeleteButton().addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                deleteSelectedCustomer();
+        display.getDeleteButton().addClickHandler(event -> {
+            Customer selected = display.getSelectedRow();
+            if (selected != null) {
+                deleteSelectedCustomer(selected);
             }
         });
 
-        display.getFindButton().addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                findCustomers();
-            }
-        });
-
-
-        display.getList().addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                int selectedRow = display.getClickedRow(event);
-
-                if (selectedRow >= 0) {
-                    Integer id = customerList.get(selectedRow).getCustomerId();
-                    eventBus.fireEvent(new EditCustomerEvent(id));
-                }
-            }
-        });
-    }
-
-    private void findCustomers() {
-        String firstName = "None";
-        rpcService.findByFirstName(firstName, new AsyncCallback<List<Customer>>() {
-            public void onSuccess(List<Customer> result) {
-                customerList = result;
-                sortCustomers();
-                List<String> data = new ArrayList<String>();
-
-                for (int i = 0; i < result.size(); ++i) {
-                    data.add(customerList.get(i).getDisplayName());
-                }
-
-                display.setData(data);
-            }
-
-            public void onFailure(Throwable caught) {
-                Window.alert("Error fetching found customers" + caught.getMessage());
-            }
-        });
+        display.getFindButton().addClickHandler(event -> rpcService.findByName(display.getFindText().getValue(), new ListAsyncCallback()));
     }
 
     public void go(final HasWidgets container) {
         bind();
         container.clear();
         container.add(display.asWidget());
-        fetchCustomers();
+        rpcService.findAll(new ListAsyncCallback());
     }
 
     public void sortCustomers() {
-
-        // Yes, we could use a more optimized method of sorting, but the
-        //  point is to create a test case that helps illustrate the higher
-        //  level concepts used when creating MVP-based applications.
-        //
         for (int i = 0; i < customerList.size(); ++i) {
             for (int j = 0; j < customerList.size() - 1; ++j) {
-                if (customerList.get(j).getLastName().compareToIgnoreCase(customerList.get(j + 1).getLastName()) >= 0) {
+                if (customerList.get(j).getModifiedWhen().compareTo(customerList.get(j + 1).getModifiedWhen()) < 0) {
                     Customer tmp = customerList.get(j);
                     customerList.set(j, customerList.get(j + 1));
                     customerList.set(j + 1, tmp);
@@ -135,39 +94,31 @@ public class CustomerPresenter implements Presenter {
         return customerList.get(index);
     }
 
-    private void fetchCustomers() {
-        rpcService.findAll(new AsyncCallback<List<Customer>>() {
-            public void onSuccess(List<Customer> result) {
-                customerList = result;
-                sortCustomers();
-                List<String> data = new ArrayList<String>();
+    private class ListAsyncCallback implements AsyncCallback<List<Customer>> {
+        public void onSuccess(List<Customer> result) {
+            CustomerPresenter.this.customerList = result;
+            sortCustomers();
 
-                for (int i = 0; i < result.size(); ++i) {
-                    data.add(customerList.get(i).getDisplayName());
-                }
+            List<Customer> data = new ArrayList<>();
+            data.addAll(result);
 
-                display.setData(data);
+            display.setData(data);
+        }
+
+        public void onFailure(Throwable caught) {
+            Window.alert("Error fetching customers" + caught.getMessage());
+        }
+    }
+
+    private void deleteSelectedCustomer(Customer customer) {
+        rpcService.delete(customer, new AsyncCallback<Void>() {
+            public void onSuccess(Void result) {
+                rpcService.findByName(display.getFindText().getValue(), new ListAsyncCallback());
             }
 
             public void onFailure(Throwable caught) {
-                Window.alert("Error fetching customers" + caught.getMessage());
+                Window.alert("Error deleting customer");
             }
         });
-    }
-
-    private void deleteSelectedCustomer() {
-        List<Integer> selectedRows = display.getSelectedRows();
-
-        for (int i = 0; i < selectedRows.size(); ++i) {
-            rpcService.delete(customerList.get(selectedRows.get(i)), new AsyncCallback<Void>() {
-                public void onSuccess(Void result) {
-                }
-
-                public void onFailure(Throwable caught) {
-                    Window.alert("Error fetching customers");
-                }
-            });
-        }
-        fetchCustomers();
     }
 }
