@@ -25,7 +25,7 @@ public class CustomerView extends Composite implements CustomerPresenter.Display
     private final TextBox findText;
     private final CellTable<Customer> table;
 
-    public Widget InitializeTable() {
+    public void InitializeTable() {
         table.setKeyboardSelectionPolicy(HasKeyboardSelectionPolicy.KeyboardSelectionPolicy.ENABLED);
 
         // Add a selection model to handle user selection.
@@ -78,51 +78,58 @@ public class CustomerView extends Composite implements CustomerPresenter.Display
             }
         };
         table.addColumn(dateColumn, "Modified When");
-
-        return table;
     }
 
     public CustomerView() {
-        DecoratorPanel contentTableDecorator = new DecoratorPanel();
-        initWidget(contentTableDecorator);
-        contentTableDecorator.setWidth("100%");
-        // contentTableDecorator.setWidth("18em");
 
-        contentTable = new FlexTable();
-        contentTable.setWidth("100%");
-        contentTable.getCellFormatter().addStyleName(0, 0, "customers-ListContainer");
-        contentTable.getCellFormatter().setWidth(0, 0, "100%");
-        contentTable.getFlexCellFormatter().setVerticalAlignment(0, 0, DockPanel.ALIGN_TOP);
-
-        // Create the menu
-        //
-        HorizontalPanel hPanel = new HorizontalPanel();
-        hPanel.setBorderWidth(0);
-        hPanel.setSpacing(0);
-        hPanel.setHorizontalAlignment(HorizontalPanel.ALIGN_LEFT);
         addButton = new Button("Add");
         addButton.setStyleName("btn btn-default");
-        hPanel.add(addButton);
+
         editButton = new Button("Edit");
         editButton.setStyleName("btn btn-default");
-        hPanel.add(editButton);
+
         deleteButton = new Button("Delete");
         deleteButton.setStyleName("btn btn-default");
-        hPanel.add(deleteButton);
+
         findText = new TextBox();
         findText.setMaxLength(50);
         findText.setStyleName("form-control");
-        hPanel.add(findText);
+
         findButton = new Button("Find");
         findButton.setStyleName("btn btn-default");
+
+        // Create the menu
+        HorizontalPanel hPanel = new HorizontalPanel();
+        hPanel.setBorderWidth(0);
+        hPanel.setSpacing(8);
+        hPanel.setHorizontalAlignment(HorizontalPanel.ALIGN_LEFT);
+
+        hPanel.add(addButton);
+        hPanel.add(editButton);
+        hPanel.add(deleteButton);
+        hPanel.add(findText);
         hPanel.add(findButton);
-        contentTable.getCellFormatter().addStyleName(0, 0, "customers-ListMenu");
-        contentTable.setWidget(0, 0, hPanel);
 
         // Create the customers list
         table = new CellTable<>();
-        contentTable.setWidget(1, 0, InitializeTable());
+        InitializeTable();
 
+        contentTable = new FlexTable();
+        contentTable.setWidth("100%");
+//        contentTable.getCellFormatter().addStyleName(0, 0, "customers-ListContainer");
+        contentTable.getCellFormatter().addStyleName(0, 0, "customers-ListMenu");
+        contentTable.getCellFormatter().setWidth(0, 0, "100%");
+        contentTable.getFlexCellFormatter().setVerticalAlignment(0, 0, DockPanel.ALIGN_TOP);
+        contentTable.getCellFormatter().addStyleName(1, 0, "customers-ListMenu");
+        contentTable.getCellFormatter().setWidth(1, 0, "100%");
+        contentTable.getFlexCellFormatter().setVerticalAlignment(1, 0, DockPanel.ALIGN_TOP);
+        contentTable.setWidget(0, 0, new HTML("<h2>Customers</h2>"));
+        contentTable.setWidget(1, 0, hPanel);
+        contentTable.setWidget(2, 0, table);
+
+        DecoratorPanel contentTableDecorator = new DecoratorPanel();
+        initWidget(contentTableDecorator);
+        contentTableDecorator.setWidth("100%");
         contentTableDecorator.add(contentTable);
     }
 

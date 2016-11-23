@@ -52,7 +52,7 @@ public class CustomerPresenter implements Presenter {
         display.getEditButton().addClickHandler(event -> {
             Customer selected = display.getSelectedRow();
             if (selected != null) {
-                Integer id = selected.getCustomerId();
+                Integer id = selected.getId();
                 eventBus.fireEvent(new EditCustomerEvent(id));
             }
         });
@@ -75,15 +75,16 @@ public class CustomerPresenter implements Presenter {
     }
 
     public void sortCustomers() {
-        for (int i = 0; i < customerList.size(); ++i) {
-            for (int j = 0; j < customerList.size() - 1; ++j) {
-                if (customerList.get(j).getModifiedWhen().compareTo(customerList.get(j + 1).getModifiedWhen()) < 0) {
-                    Customer tmp = customerList.get(j);
-                    customerList.set(j, customerList.get(j + 1));
-                    customerList.set(j + 1, tmp);
-                }
-            }
-        }
+        return;
+//        for (int i = 0; i < customerList.size(); ++i) {
+//            for (int j = 0; j < customerList.size() - 1; ++j) {
+//                if (customerList.get(j).getModifiedWhen().compareTo(customerList.get(j + 1).getModifiedWhen()) < 0) {
+//                    Customer tmp = customerList.get(j);
+//                    customerList.set(j, customerList.get(j + 1));
+//                    customerList.set(j + 1, tmp);
+//                }
+//            }
+//        }
     }
 
     public void setCustomerList(List<Customer> customerList) {

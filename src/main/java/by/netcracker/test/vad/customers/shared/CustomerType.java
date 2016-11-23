@@ -9,17 +9,17 @@ public class CustomerType implements Serializable {
     @Id
     @GeneratedValue
     @Column(name = "customer_type_id")
-    private Integer customerTypeId;
+    private Integer id;
 
     @Column(name = "customer_type_caption")
     private String customerTypeCaption;
 
-    public Integer getCustomerTypeId() {
-        return customerTypeId;
+    public Integer getId() {
+        return id;
     }
 
-    public void setCustomerTypeId(Integer customerTypeId) {
-        this.customerTypeId = customerTypeId;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getCustomerTypeCaption() {

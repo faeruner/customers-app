@@ -106,9 +106,20 @@ public class EditCustomerPresenter implements Presenter {
 
     private void doSave() {
 
-        if (!validate(display.getCustomerTitle().getValue(),
-                display.getFirstName().getValue(),
-                display.getLastName().getValue()).isEmpty()) return;
+        Boolean valid = true;
+        String help = validate(display.getCustomerTitle().getValue());
+        display.setTitleHelp(help);
+        valid &= help.isEmpty();
+
+        help = validate(display.getFirstName().getValue());
+        display.setFirstNameHelp(help);
+        valid &= help.isEmpty();
+
+        help = validate(display.getLastName().getValue());
+        display.setLastNameHelp(help);
+        valid &= help.isEmpty();
+
+        if (!valid) return;
 
         customer.setTitle(display.getCustomerTitle().getValue());
         customer.setFirstName(display.getFirstName().getValue());
@@ -161,7 +172,6 @@ public class EditCustomerPresenter implements Presenter {
                 break;
             }
         }
-
         return help;
     }
 

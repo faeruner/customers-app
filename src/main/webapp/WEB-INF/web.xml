@@ -18,7 +18,7 @@
 
     <servlet>
         <servlet-name>customerServiceServlet</servlet-name>
-        <servlet-class>org.spring4gwt.server.SpringGwtRemoteServiceServlet</servlet-class>
+        <servlet-class>by.netcracker.test.vad.customers.server.CustomerServiceImpl</servlet-class>
     </servlet>
 
     <servlet-mapping>

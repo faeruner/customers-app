@@ -4,7 +4,11 @@ import by.netcracker.test.vad.customers.client.CustomerService;
 import by.netcracker.test.vad.customers.repository.CustomerRepository;
 import by.netcracker.test.vad.customers.shared.Customer;
 import com.google.common.collect.Lists;
+import com.google.gwt.user.client.rpc.SerializationException;
 import org.apache.commons.codec.language.Metaphone;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.spring4gwt.server.SpringGwtRemoteServiceServlet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,23 +26,34 @@ import java.util.List;
 @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
 @Service("customerService")
 @SuppressWarnings("serial")
-public class CustomerServiceImpl implements CustomerService {
+public class CustomerServiceImpl extends SpringGwtRemoteServiceServlet implements CustomerService {
 
+    private Logger log = LogManager.getLogger(CustomerServiceImpl.class);
 
     @Autowired
     private CustomerRepository customerRepository;
 
+    @Override
+    public String processCall(String payload) throws SerializationException {
+        log.info("[HOST:" + getThreadLocalRequest().getRemoteHost() + "]");
+        return super.processCall(payload);
+    }
+
+
     public Customer findOne(Integer id) {
+        log.info("find by id: " + id);
         return customerRepository.findOne(id);
     }
 
     public List<Customer> findByName(String str) {
+        log.info("find by Metaphone: " + str);
         if (str.isEmpty())
-            return customerRepository.findTop10ByOrderByModifiedWhenDesc();
+            return customerRepository.findByOrderByModifiedWhenDesc(new PageRequest(0, 10));
         else {
             Metaphone metaphone = new Metaphone();
             String code = "%" + metaphone.encode(str) + "%";
-            return customerRepository.findTop20ByFirstNameMetaphoneLikeOrLastNameMetaphoneLikeOrderByModifiedWhenDesc(code, code);
+            log.info("find by Metaphone code: " + code);
+            return customerRepository.findByFirstNameMetaphoneLikeOrLastNameMetaphoneLikeOrderByModifiedWhenDesc(code, code, new PageRequest(0, 20));
         }
     }
 
@@ -53,16 +68,19 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     public List<Customer> findAll() {
-        return Lists.newArrayList(customerRepository.findTop10ByOrderByModifiedWhenDesc());
+        log.info("find all");
+        return Lists.newArrayList(customerRepository.findByOrderByModifiedWhenDesc(new PageRequest(0, 10)));
     }
 
     @Transactional
     public void delete(Customer entity) {
+        log.info("delete customer: " + entity.getFirstName() + " " + entity.getLastName());
         customerRepository.delete(entity);
     }
 
     @Transactional
     public Customer save(Customer entity) {
+        log.info("save customer: " + entity.getFirstName() + " " + entity.getLastName());
         entity.setModifiedWhen(new Date());
         Metaphone metaphone = new Metaphone();
         metaphone.setMaxCodeLen(50);

@@ -26,23 +26,11 @@ public class EditCustomerView extends Composite implements EditCustomerPresenter
     private final Button cancelButton;
 
     public EditCustomerView() {
-        DecoratorPanel contentDetailsDecorator = new DecoratorPanel();
-        contentDetailsDecorator.setWidth("18em");
-        initWidget(contentDetailsDecorator);
 
-        VerticalPanel contentDetailsPanel = new VerticalPanel();
-        contentDetailsPanel.setWidth("100%");
-
-        // Create the customers list
-        //
-        detailsTable = new FlexTable();
-        detailsTable.setCellSpacing(4);
-        detailsTable.setWidth("100%");
-        detailsTable.addStyleName("customers-ListContainer");
-        detailsTable.getColumnFormatter().addStyleName(1, "add-customer-input");
+        // Create fields
 
         title = new TextBox();
-        title.setMaxLength(3);
+        title.setMaxLength(4);
         title.setStyleName("form-control");
         titleHelp = new Label();
         titleHelp.addStyleName("alert-warning");
@@ -62,28 +50,62 @@ public class EditCustomerView extends Composite implements EditCustomerPresenter
         typeCustomer = new ListBox();
         typeCustomer.ensureDebugId("ListBox-dropBox");
         typeCustomer.setStyleName("form-control");
+
         modifiedDate = new DateBox();
         modifiedDate.setEnabled(false);
         modifiedDate.setStyleName("form-control");
         DateTimeFormat format = DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_TIME_SHORT);
         modifiedDate.setFormat(new DateBox.DefaultFormat(format));
 
-        initDetailsTable();
-        contentDetailsPanel.add(detailsTable);
-
-        HorizontalPanel menuPanel = new HorizontalPanel();
+        // Create buttons
         saveButton = new Button("Save");
         saveButton.setStyleName("btn btn-primary");
+
         cancelButton = new Button("Cancel");
         cancelButton.setStyleName("btn btn-default");
+
+        // Create the customers list
+        detailsTable = new FlexTable();
+        detailsTable.setCellSpacing(4);
+        detailsTable.setWidth("100%");
+        detailsTable.addStyleName("customers-ListContainer");
+        detailsTable.getColumnFormatter().addStyleName(1, "add-customer-input");
+        initDetailsTable();
+
+        HorizontalPanel menuPanel = new HorizontalPanel();
+        menuPanel.setHorizontalAlignment(HorizontalPanel.ALIGN_CENTER);
         menuPanel.add(saveButton);
         menuPanel.add(cancelButton);
-        contentDetailsPanel.add(menuPanel);
+
+        HorizontalPanel hPanel = new HorizontalPanel();
+        hPanel.setBorderWidth(0);
+        hPanel.setSpacing(0);
+        hPanel.setHorizontalAlignment(HorizontalPanel.ALIGN_LEFT);
+        hPanel.add(new HTML("<h3>Customer's attributes</h3>"));
+
+        FlexTable contentDetailsPanel = new FlexTable();
+        contentDetailsPanel.setWidth("100%");
+        contentDetailsPanel.getCellFormatter().addStyleName(0, 0, "customers-ListMenu");
+        contentDetailsPanel.getCellFormatter().setWidth(0, 0, "100%");
+        contentDetailsPanel.getFlexCellFormatter().setVerticalAlignment(0, 0, DockPanel.ALIGN_TOP);
+        contentDetailsPanel.getCellFormatter().addStyleName(2, 0, "customers-ListMenu");
+        contentDetailsPanel.getCellFormatter().setWidth(2, 0, "100%");
+        contentDetailsPanel.getFlexCellFormatter().setVerticalAlignment(2, 0, DockPanel.ALIGN_MIDDLE);
+
+
+        contentDetailsPanel.setWidget(0, 0, hPanel);
+        contentDetailsPanel.setWidget(1, 0, detailsTable);
+        contentDetailsPanel.setWidget(2, 0, menuPanel);
+
+        DecoratorPanel contentDetailsDecorator = new DecoratorPanel();
+        initWidget(contentDetailsDecorator);
+        contentDetailsDecorator.setWidth("24em");
         contentDetailsDecorator.add(contentDetailsPanel);
     }
 
     private void initDetailsTable() {
         int row = 0;
+
         detailsTable.setWidget(row, 0, new Label("Title"));
         detailsTable.setWidget(row++, 1, title);
         detailsTable.setWidget(row++, 1, titleHelp);

@@ -1,8 +1,6 @@
 package by.netcracker.test.vad.customers.shared;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -10,27 +8,21 @@ import java.util.Date;
 @Table(name = "customers")
 public class Customer implements Serializable {
     @Id
-    @SequenceGenerator(name="customerSequence", sequenceName="\"CUSTOMERS_CUSTOMER_ID_seq\"")
+    @SequenceGenerator(name = "customerSequence", sequenceName = "customers_seq")
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="customerSequence")
     @Column(name = "customer_id")
-    private Integer customerId;
+    private Integer id;
 
     @Column(name = "title")
-    @NotNull
-    @Size(min = 2, message = "Name must be at least 2 characters long.")
     private String title;
 
     @Column(name = "first_name")
-    @NotNull
-    @Size(min = 2, message = "Name must be at least 2 characters long.")
     private String firstName;
 
     @Column(name = "first_name_metaphone")
     private String firstNameMetaphone;
 
     @Column(name = "last_name")
-    @NotNull
-    @Size(min = 2, message = "Name must be at least 2 characters long.")
     private String lastName;
 
     @Column(name = "last_name_metaphone")
@@ -43,8 +35,8 @@ public class Customer implements Serializable {
     @JoinColumn(name = "type")
     private CustomerType type;
 
-    public Integer getCustomerId() {
-        return customerId;
+    public Integer getId() {
+        return id;
     }
 
     public String getTitle() {
@@ -103,7 +95,7 @@ public class Customer implements Serializable {
         this.lastNameMetaphone = lastNameMetaphone;
     }
 
-    public void setCustomerId(Integer customerId) {
-        this.customerId = customerId;
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

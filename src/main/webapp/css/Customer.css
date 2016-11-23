@@ -40,6 +40,7 @@ td.customers-NavContainer {
 }
 
 td.customers-ListMenu {
+    padding-top: 6px;
     background-color: #D0E4F6;
     padding-bottom: 6px;
 }

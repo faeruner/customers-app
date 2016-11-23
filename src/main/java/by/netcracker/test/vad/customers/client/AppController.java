@@ -22,6 +22,7 @@ public class AppController implements Presenter, ValueChangeHandler<String> {
     this.eventBus = eventBus;
     this.rpcCustomerService = rpcCustomerService;
     this.rpcCustomerTypeService = rpcCustomerTypeService;
+
     bind();
   }
   
