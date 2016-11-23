@@ -21,7 +21,6 @@
           <element id="library" level="project" name="Maven: org.springframework.data:spring-data-jpa:1.5.0.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework.data:spring-data-commons:1.7.0.RELEASE" />
           <element id="library" level="project" name="Maven: org.aspectj:aspectjrt:1.7.4" />
-          <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.6" />
           <element id="library" level="project" name="Maven: org.springframework:spring-oxm:4.3.3.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework:spring-test:4.3.3.RELEASE" />
           <element id="library" level="project" name="Maven: org.hibernate:hibernate-core:4.3.6.Final" />
@@ -38,12 +37,14 @@
           <element id="library" level="project" name="Maven: com.google.guava:guava:14.0.1" />
           <element id="library" level="project" name="Maven: commons-dbcp:commons-dbcp:1.4" />
           <element id="library" level="project" name="Maven: commons-pool:commons-pool:1.5.4" />
+          <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.21" />
           <element id="library" level="project" name="Maven: org.slf4j:jcl-over-slf4j:1.7.21" />
           <element id="library" level="project" name="Maven: org.slf4j:slf4j-log4j12:1.7.21" />
           <element id="library" level="project" name="Maven: log4j:log4j:1.2.17" />
           <element id="library" level="project" name="Maven: org.postgresql:postgresql:9.4-1206-jdbc42" />
           <element id="library" level="project" name="Maven: com.google.gwt:gwt-servlet:2.8.0" />
           <element id="library" level="project" name="Maven: xml-apis:xml-apis:1.4.01" />
+          <element id="library" level="project" name="Maven: commons-codec:commons-codec:1.10" />
         </element>
       </element>
       <element id="directory" name="META-INF">

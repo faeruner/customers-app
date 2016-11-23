@@ -29,6 +29,8 @@ import java.util.List;
 public class CustomerServiceImpl extends SpringGwtRemoteServiceServlet implements CustomerService {
 
     private final Logger log = LogManager.getLogger(CustomerServiceImpl.class);
+    private static final Integer LIMIT_REC_ALL = 10;
+    private static final Integer LIMIT_REC_FIND = 20;
 
     @Autowired
     private CustomerRepository customerRepository;
@@ -48,12 +50,12 @@ public class CustomerServiceImpl extends SpringGwtRemoteServiceServlet implement
     public List<Customer> findByName(String str) {
         log.info("find by Metaphone: " + str);
         if (str.isEmpty())
-            return customerRepository.findByOrderByModifiedWhenDesc(new PageRequest(0, 10));
+            return customerRepository.findByOrderByModifiedWhenDesc(new PageRequest(0, LIMIT_REC_ALL));
         else {
             Metaphone metaphone = new Metaphone();
             String code = "%" + metaphone.encode(str) + "%";
             log.info("find by Metaphone code: " + code);
-            return customerRepository.findByFirstNameMetaphoneLikeOrLastNameMetaphoneLikeOrderByModifiedWhenDesc(code, code, new PageRequest(0, 20));
+            return customerRepository.findByFirstNameMetaphoneLikeOrLastNameMetaphoneLikeOrderByModifiedWhenDesc(code, code, new PageRequest(0, LIMIT_REC_FIND));
         }
     }
 
@@ -69,7 +71,7 @@ public class CustomerServiceImpl extends SpringGwtRemoteServiceServlet implement
 
     public List<Customer> findAll() {
         log.info("find all");
-        return Lists.newArrayList(customerRepository.findByOrderByModifiedWhenDesc(new PageRequest(0, 10)));
+        return Lists.newArrayList(customerRepository.findByOrderByModifiedWhenDesc(new PageRequest(0, LIMIT_REC_ALL)));
     }
 
     @Transactional

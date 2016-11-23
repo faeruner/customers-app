@@ -16,7 +16,6 @@
     <!-- Specify the app entry point class.                         -->
     <entry-point class='by.netcracker.test.vad.customers.client.CustomerEntryPoint'/>
     <extend-property name="locale" values="ru_RU"/>
-    <extend-configuration-property name="runtime.locales" value="ru_RU"/>
 
     <!-- Specify the paths for translatable code                    -->
     <source path='client'/>
