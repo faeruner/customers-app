@@ -35,7 +35,7 @@ public class EditCustomerView extends Composite implements EditCustomerPresenter
         // Create fields
 
         title = new TextBox();
-        title.setMaxLength(4);
+        title.setMaxLength(3);
         title.setStyleName("form-control");
         titleHelp = new Label();
         titleHelp.addStyleName("alert-warning");
