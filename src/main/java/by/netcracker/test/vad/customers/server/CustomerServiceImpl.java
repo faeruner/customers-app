@@ -28,7 +28,7 @@ import java.util.List;
 @SuppressWarnings("serial")
 public class CustomerServiceImpl extends SpringGwtRemoteServiceServlet implements CustomerService {
 
-    private Logger log = LogManager.getLogger(CustomerServiceImpl.class);
+    private final Logger log = LogManager.getLogger(CustomerServiceImpl.class);
 
     @Autowired
     private CustomerRepository customerRepository;

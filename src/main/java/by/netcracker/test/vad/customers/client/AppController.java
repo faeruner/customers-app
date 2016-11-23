@@ -1,6 +1,9 @@
 package by.netcracker.test.vad.customers.client;
 
-import by.netcracker.test.vad.customers.client.event.*;
+import by.netcracker.test.vad.customers.client.event.AddCustomerEvent;
+import by.netcracker.test.vad.customers.client.event.CustomerUpdatedEvent;
+import by.netcracker.test.vad.customers.client.event.EditCustomerCancelledEvent;
+import by.netcracker.test.vad.customers.client.event.EditCustomerEvent;
 import by.netcracker.test.vad.customers.client.presenter.CustomerPresenter;
 import by.netcracker.test.vad.customers.client.presenter.EditCustomerPresenter;
 import by.netcracker.test.vad.customers.client.presenter.Presenter;
@@ -13,99 +16,81 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.HasWidgets;
 
 public class AppController implements Presenter, ValueChangeHandler<String> {
-  private final HandlerManager eventBus;
-  private final CustomerServiceAsync rpcCustomerService;
-  private final CustomerTypeServiceAsync rpcCustomerTypeService;
-  private HasWidgets container;
-  
-  public AppController(CustomerServiceAsync rpcCustomerService, CustomerTypeServiceAsync rpcCustomerTypeService, HandlerManager eventBus) {
-    this.eventBus = eventBus;
-    this.rpcCustomerService = rpcCustomerService;
-    this.rpcCustomerTypeService = rpcCustomerTypeService;
 
-    bind();
-  }
-  
-  private void bind() {
-    History.addValueChangeHandler(this);
+    private static final String EVENT_LIST = "list";
+    private static final String EVENT_ADD = "add";
+    private static final String EVENT_EDIT = "edit";
 
-    eventBus.addHandler(AddCustomerEvent.TYPE,
-        new AddCustomerEventHandler() {
-          public void onAddCustomer(AddCustomerEvent event) {
-            doAddNewCustomer();
-          }
-        });  
+    private final HandlerManager eventBus;
+    private final CustomerServiceAsync rpcCustomerService;
+    private final CustomerTypeServiceAsync rpcCustomerTypeService;
+    private HasWidgets container;
 
-    eventBus.addHandler(EditCustomerEvent.TYPE,
-        new EditCustomerEventHandler() {
-          public void onEditCustomer(EditCustomerEvent event) {
-            doEditCustomer(event.getId());
-          }
-        });  
+    public AppController(CustomerServiceAsync rpcCustomerService, CustomerTypeServiceAsync rpcCustomerTypeService, HandlerManager eventBus) {
+        this.eventBus = eventBus;
+        this.rpcCustomerService = rpcCustomerService;
+        this.rpcCustomerTypeService = rpcCustomerTypeService;
 
-    eventBus.addHandler(EditCustomerCancelledEvent.TYPE,
-        new EditCustomerCancelledEventHandler() {
-          public void onEditCustomerCancelled(EditCustomerCancelledEvent event) {
-            doEditCustomerCancelled();
-          }
-        });  
-
-    eventBus.addHandler(CustomerUpdatedEvent.TYPE,
-        new CustomerUpdatedEventHandler() {
-          public void onCustomerUpdated(CustomerUpdatedEvent event) {
-            doCustomerUpdated();
-          }
-        });  
-  }
-  
-  private void doAddNewCustomer() {
-    History.newItem("add");
-  }
-  
-  private void doEditCustomer(Integer id) {
-    History.newItem("edit", false);
-    Presenter presenter = new EditCustomerPresenter(rpcCustomerService, rpcCustomerTypeService, eventBus, new EditCustomerView(), id);
-    presenter.go(container);
-  }
-  
-  private void doEditCustomerCancelled() {
-    History.newItem("list");
-  }
-  
-  private void doCustomerUpdated() {
-    History.newItem("list");
-  }
-  
-  public void go(final HasWidgets container) {
-    this.container = container;
-    
-    if ("".equals(History.getToken())) {
-      History.newItem("list");
+        bind();
     }
-    else {
-      History.fireCurrentHistoryState();
+
+    private void bind() {
+        History.addValueChangeHandler(this);
+        eventBus.addHandler(AddCustomerEvent.TYPE, event -> doAddNewCustomer());
+        eventBus.addHandler(EditCustomerEvent.TYPE, event -> doEditCustomer(event.getId()));
+        eventBus.addHandler(EditCustomerCancelledEvent.TYPE, event -> doEditCustomerCancelled());
+        eventBus.addHandler(CustomerUpdatedEvent.TYPE, event -> doCustomerUpdated());
     }
-  }
 
-  public void onValueChange(ValueChangeEvent<String> event) {
-    String token = event.getValue();
-    
-    if (token != null) {
-      Presenter presenter = null;
+    private void doAddNewCustomer() {
+        History.newItem(EVENT_ADD);
+    }
 
-      if (token.equals("list")) {
-        presenter = new CustomerPresenter(rpcCustomerService, eventBus, new CustomerView());
-      }
-      else if (token.equals("add")) {
-        presenter = new EditCustomerPresenter(rpcCustomerService, rpcCustomerTypeService, eventBus, new EditCustomerView());
-      }
-      else if (token.equals("edit")) {
-        presenter = new EditCustomerPresenter(rpcCustomerService, rpcCustomerTypeService, eventBus, new EditCustomerView());
-      }
-      
-      if (presenter != null) {
+    private void doEditCustomer(Integer id) {
+        History.newItem(EVENT_EDIT, false);
+        Presenter presenter = new EditCustomerPresenter(rpcCustomerService, rpcCustomerTypeService, eventBus, new EditCustomerView(), id);
         presenter.go(container);
-      }
     }
-  } 
+
+    private void doEditCustomerCancelled() {
+        History.newItem(EVENT_LIST);
+    }
+
+    private void doCustomerUpdated() {
+        History.newItem(EVENT_LIST);
+    }
+
+    public void go(final HasWidgets container) {
+        this.container = container;
+
+        if ("".equals(History.getToken())) {
+            History.newItem(EVENT_LIST);
+        } else {
+            History.fireCurrentHistoryState();
+        }
+    }
+
+    public void onValueChange(ValueChangeEvent<String> event) {
+        String token = event.getValue();
+
+        if (token != null) {
+            Presenter presenter = null;
+
+            switch (token) {
+                case EVENT_LIST:
+                    presenter = new CustomerPresenter(rpcCustomerService, eventBus, new CustomerView());
+                    break;
+                case EVENT_ADD:
+                    presenter = new EditCustomerPresenter(rpcCustomerService, rpcCustomerTypeService, eventBus, new EditCustomerView());
+                    break;
+                case EVENT_EDIT:
+                    presenter = new EditCustomerPresenter(rpcCustomerService, rpcCustomerTypeService, eventBus, new EditCustomerView());
+                    break;
+            }
+
+            if (presenter != null) {
+                presenter.go(container);
+            }
+        }
+    }
 }

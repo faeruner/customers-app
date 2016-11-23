@@ -2,10 +2,13 @@ package by.netcracker.test.vad.customers.client.presenter;
 
 import by.netcracker.test.vad.customers.client.CustomerServiceAsync;
 import by.netcracker.test.vad.customers.client.CustomerTypeServiceAsync;
+import by.netcracker.test.vad.customers.client.Messages;
 import by.netcracker.test.vad.customers.client.event.CustomerUpdatedEvent;
 import by.netcracker.test.vad.customers.client.event.EditCustomerCancelledEvent;
 import by.netcracker.test.vad.customers.shared.Customer;
 import by.netcracker.test.vad.customers.shared.CustomerType;
+import by.netcracker.test.vad.customers.shared.FieldVerifier;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.Window;
@@ -20,6 +23,8 @@ import java.util.List;
 
 
 public class EditCustomerPresenter implements Presenter {
+
+    private final Messages messages = (Messages) GWT.create(Messages.class);
 
     public interface Display {
         HasClickHandlers getSaveButton();
@@ -50,7 +55,7 @@ public class EditCustomerPresenter implements Presenter {
     }
 
     private Customer customer;
-    List<CustomerType> typesList;
+    private List<CustomerType> typesList;
     private final CustomerServiceAsync rpcCustomerService;
     private final CustomerTypeServiceAsync rpcTypeService;
     private final HandlerManager eventBus;
@@ -85,18 +90,18 @@ public class EditCustomerPresenter implements Presenter {
             }
 
             public void onFailure(Throwable caught) {
-                Window.alert("Error retrieving customer");
+                Window.alert(messages.retrievingError());
             }
         });
 
     }
 
-    public void bind() {
+    private void bind() {
         this.display.getSaveButton().addClickHandler(event -> doSave());
         this.display.getCancelButton().addClickHandler(event -> eventBus.fireEvent(new EditCustomerCancelledEvent()));
-        this.display.getCustomerTitle().addValueChangeHandler(valueChangeEvent -> EditCustomerPresenter.this.display.setTitleHelp(validate(valueChangeEvent.getValue())));
-        this.display.getFirstName().addValueChangeHandler(valueChangeEvent -> EditCustomerPresenter.this.display.setFirstNameHelp(validate(valueChangeEvent.getValue())));
-        this.display.getLastName().addValueChangeHandler(valueChangeEvent -> EditCustomerPresenter.this.display.setLastNameHelp(validate(valueChangeEvent.getValue())));
+        this.display.getCustomerTitle().addValueChangeHandler(valueChangeEvent -> display.setTitleHelp(FieldVerifier.validateInput(valueChangeEvent.getValue())));
+        this.display.getFirstName().addValueChangeHandler(valueChangeEvent -> display.setFirstNameHelp(FieldVerifier.validateInput(valueChangeEvent.getValue())));
+        this.display.getLastName().addValueChangeHandler(valueChangeEvent -> display.setLastNameHelp(FieldVerifier.validateInput(valueChangeEvent.getValue())));
     }
 
     public void go(final HasWidgets container) {
@@ -106,16 +111,15 @@ public class EditCustomerPresenter implements Presenter {
 
     private void doSave() {
 
-        Boolean valid = true;
-        String help = validate(display.getCustomerTitle().getValue());
+        String help = FieldVerifier.validateInput(display.getCustomerTitle().getValue());
         display.setTitleHelp(help);
-        valid &= help.isEmpty();
+        Boolean valid = help.isEmpty();
 
-        help = validate(display.getFirstName().getValue());
+        help = FieldVerifier.validateInput(display.getFirstName().getValue());
         display.setFirstNameHelp(help);
         valid &= help.isEmpty();
 
-        help = validate(display.getLastName().getValue());
+        help = FieldVerifier.validateInput(display.getLastName().getValue());
         display.setLastNameHelp(help);
         valid &= help.isEmpty();
 
@@ -140,7 +144,7 @@ public class EditCustomerPresenter implements Presenter {
             }
 
             public void onFailure(Throwable caught) {
-                Window.alert("Error updating customer");
+                Window.alert(messages.updatingError());
             }
         });
     }
@@ -155,24 +159,8 @@ public class EditCustomerPresenter implements Presenter {
             }
 
             public void onFailure(Throwable caught) {
-                Window.alert("Error retrieving customer");
+                Window.alert(messages.retrievingError());
             }
         });
-
     }
-
-    private String validate(String... input) {
-        String help = "";
-        for (String t : input) {
-            if (t == null || t.trim().equals("")) {
-                help = "Value is empty!";
-                break;
-            } else if (!t.matches("^[- a-zA-Z]*$")) {
-                help = "Only letters is allowed!";
-                break;
-            }
-        }
-        return help;
-    }
-
 }

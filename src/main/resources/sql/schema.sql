@@ -29,8 +29,8 @@ CREATE TABLE public.customers
   last_name            CHARACTER VARYING(50) COLLATE pg_catalog."default",
   modified_when        TIMESTAMP WITH TIME ZONE,
   type                 INTEGER,
-  first_name_metaphone CHARACTER VARYING(50) COLLATE pg_catalog."default",
-  last_name_metaphone  CHARACTER VARYING(50) COLLATE pg_catalog."default",
+  first_name_metaphone CHARACTER VARYING(30) COLLATE pg_catalog."default",
+  last_name_metaphone  CHARACTER VARYING(30) COLLATE pg_catalog."default",
   CONSTRAINT customers_pkey PRIMARY KEY (customer_id),
   CONSTRAINT customers_type_fk FOREIGN KEY (type)
   REFERENCES public.customer_types (customer_type_id) MATCH SIMPLE

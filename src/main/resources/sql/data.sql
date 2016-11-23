@@ -1,7 +1,7 @@
 INSERT INTO public.customer_types(customer_type_id, customer_type_caption) VALUES (1,'Primary');
 INSERT INTO public.customer_types(customer_type_id, customer_type_caption) VALUES (2,'Secondary');
 INSERT INTO public.customer_types(customer_type_id, customer_type_caption) VALUES (3,'Royal');
-INSERT INTO public.customer_types(customer_type_id, customer_type_caption) VALUES (4,'Briliant');
+INSERT INTO public.customer_types (customer_type_id, customer_type_caption) VALUES (4, 'Brilliant');
 INSERT INTO public.customer_types(customer_type_id, customer_type_caption) VALUES (5,'Nippon');
 
 INSERT INTO public.customers(customer_id, title, first_name, last_name, type, first_name_metaphone, last_name_metaphone) VALUES (nextval('public.customers_seq'), 'Miss','Mary', 'Smith', 1,'MARY', 'SMITH' );
@@ -406,5 +406,12 @@ INSERT INTO public.customers(customer_id, title, first_name, last_name, type, fi
 INSERT INTO public.customers(customer_id, title, first_name, last_name, type, first_name_metaphone, last_name_metaphone) VALUES (nextval('public.customers_seq'), 'Mr','Gilbert', 'Franklin', 3,'GILBERT', 'FRANKLIN' );
 INSERT INTO public.customers(customer_id, title, first_name, last_name, type, first_name_metaphone, last_name_metaphone) VALUES (nextval('public.customers_seq'), 'Mr','Gene','Lawson',3,'GENE','LAWSON');
 
-update public.customers set first_name_metaphone = metaphone(first_name, 50), last_name_metaphone = metaphone(last_name, 50), modified_when = current_timestamp - 10;
+CREATE EXTENSION fuzzystrmatch;
+GRANT EXECUTE ON FUNCTION metaphone (TEXT, INT) TO PUBLIC;
+UPDATE public.customers
+SET
+  first_name_metaphone = metaphone(first_name, 30),
+  last_name_metaphone  = metaphone(last_name, 30),
+  modified_when        = current_timestamp - INTERVAL '10 minute' * 100 * random();
+
 COMMIT;

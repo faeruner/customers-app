@@ -1,6 +1,8 @@
 package by.netcracker.test.vad.customers.client.view;
 
+import by.netcracker.test.vad.customers.client.Messages;
 import by.netcracker.test.vad.customers.client.presenter.EditCustomerPresenter;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.*;
@@ -10,6 +12,9 @@ import java.util.Date;
 import java.util.List;
 
 public class EditCustomerView extends Composite implements EditCustomerPresenter.Display {
+
+    private final Messages messages = (Messages) GWT.create(Messages.class);
+
     private final TextBox title;
     private final Label titleHelp;
 
@@ -58,10 +63,10 @@ public class EditCustomerView extends Composite implements EditCustomerPresenter
         modifiedDate.setFormat(new DateBox.DefaultFormat(format));
 
         // Create buttons
-        saveButton = new Button("Save");
+        saveButton = new Button(messages.saveButton());
         saveButton.setStyleName("btn btn-primary");
 
-        cancelButton = new Button("Cancel");
+        cancelButton = new Button(messages.cancelButton());
         cancelButton.setStyleName("btn btn-default");
 
         // Create the customers list
@@ -81,7 +86,7 @@ public class EditCustomerView extends Composite implements EditCustomerPresenter
         hPanel.setBorderWidth(0);
         hPanel.setSpacing(0);
         hPanel.setHorizontalAlignment(HorizontalPanel.ALIGN_LEFT);
-        hPanel.add(new HTML("<h3>Customer's attributes</h3>"));
+        hPanel.add(new HTML("<h3>" + messages.customerEdit() + "</h3>"));
 
         FlexTable contentDetailsPanel = new FlexTable();
         contentDetailsPanel.setWidth("100%");
@@ -106,23 +111,23 @@ public class EditCustomerView extends Composite implements EditCustomerPresenter
     private void initDetailsTable() {
         int row = 0;
 
-        detailsTable.setWidget(row, 0, new Label("Title"));
+        detailsTable.setWidget(row, 0, new Label(messages.titleField()));
         detailsTable.setWidget(row++, 1, title);
         detailsTable.setWidget(row++, 1, titleHelp);
 
-        detailsTable.setWidget(row, 0, new Label("First Name"));
+        detailsTable.setWidget(row, 0, new Label(messages.firsNameField()));
         detailsTable.setWidget(row++, 1, firstName);
         detailsTable.setWidget(row++, 1, firstNameHelp);
 
-        detailsTable.setWidget(row, 0, new Label("Last Name"));
+        detailsTable.setWidget(row, 0, new Label(messages.lastNameField()));
         detailsTable.setWidget(row++, 1, lastName);
         detailsTable.setWidget(row++, 1, lastNameHelp);
 
-        detailsTable.setWidget(row, 0, new Label("Type"));
+        detailsTable.setWidget(row, 0, new Label(messages.typeField()));
         detailsTable.setWidget(row++, 1, typeCustomer);
 
-        detailsTable.setWidget(row, 0, new Label("Modified Date"));
-        detailsTable.setWidget(row++, 1, modifiedDate);
+        detailsTable.setWidget(row, 0, new Label(messages.modifiedWhenField()));
+        detailsTable.setWidget(row, 1, modifiedDate);
 
         title.setFocus(true);
     }
@@ -157,7 +162,7 @@ public class EditCustomerView extends Composite implements EditCustomerPresenter
 
     public void setTypes(List<String> data) {
         typeCustomer.clear();
-        data.forEach(item -> typeCustomer.addItem(item));
+        data.forEach(typeCustomer::addItem);
     }
 
     @Override

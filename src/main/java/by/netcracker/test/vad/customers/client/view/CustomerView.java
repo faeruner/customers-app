@@ -1,8 +1,10 @@
 package by.netcracker.test.vad.customers.client.view;
 
+import by.netcracker.test.vad.customers.client.Messages;
 import by.netcracker.test.vad.customers.client.presenter.CustomerPresenter;
 import by.netcracker.test.vad.customers.shared.Customer;
 import com.google.gwt.cell.client.DateCell;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.cellview.client.CellTable;
@@ -17,7 +19,8 @@ import java.util.List;
 
 public class CustomerView extends Composite implements CustomerPresenter.Display {
 
-    private final FlexTable contentTable;
+    private final Messages messages = (Messages) GWT.create(Messages.class);
+
     private final Button addButton;
     private final Button editButton;
     private final Button deleteButton;
@@ -25,11 +28,11 @@ public class CustomerView extends Composite implements CustomerPresenter.Display
     private final TextBox findText;
     private final CellTable<Customer> table;
 
-    public void InitializeTable() {
+    private void InitializeTable() {
         table.setKeyboardSelectionPolicy(HasKeyboardSelectionPolicy.KeyboardSelectionPolicy.ENABLED);
 
         // Add a selection model to handle user selection.
-        final SingleSelectionModel<Customer> selectionModel = new SingleSelectionModel<Customer>();
+        final SingleSelectionModel<Customer> selectionModel = new SingleSelectionModel<>();
         table.setSelectionModel(selectionModel);
 
         // Add a text column to show the Title.
@@ -39,7 +42,7 @@ public class CustomerView extends Composite implements CustomerPresenter.Display
                 return object.getTitle();
             }
         };
-        table.addColumn(titleColumn, "Title");
+        table.addColumn(titleColumn, messages.titleField());
 
         // Add a text column to show the First Name.
         TextColumn<Customer> firstNameColumn = new TextColumn<Customer>() {
@@ -48,7 +51,7 @@ public class CustomerView extends Composite implements CustomerPresenter.Display
                 return object.getFirstName();
             }
         };
-        table.addColumn(firstNameColumn, "First Name");
+        table.addColumn(firstNameColumn, messages.firsNameField());
 
         // Add a text column to show the Last Name.
         TextColumn<Customer> lastNameColumn = new TextColumn<Customer>() {
@@ -57,7 +60,7 @@ public class CustomerView extends Composite implements CustomerPresenter.Display
                 return object.getLastName();
             }
         };
-        table.addColumn(lastNameColumn, "Last Name");
+        table.addColumn(lastNameColumn, messages.lastNameField());
 
         // Add a text column to show the Type.
         TextColumn<Customer> typeColumn = new TextColumn<Customer>() {
@@ -66,7 +69,7 @@ public class CustomerView extends Composite implements CustomerPresenter.Display
                 return object.getType().getCustomerTypeCaption();
             }
         };
-        table.addColumn(typeColumn, "Type");
+        table.addColumn(typeColumn, messages.typeField());
 
         // Add a date column to show the Modified When.
         DateTimeFormat format = DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_TIME_SHORT);
@@ -77,25 +80,25 @@ public class CustomerView extends Composite implements CustomerPresenter.Display
                 return object.getModifiedWhen();
             }
         };
-        table.addColumn(dateColumn, "Modified When");
+        table.addColumn(dateColumn, messages.modifiedWhenField());
     }
 
     public CustomerView() {
 
-        addButton = new Button("Add");
+        addButton = new Button(messages.addButton());
         addButton.setStyleName("btn btn-default");
 
-        editButton = new Button("Edit");
+        editButton = new Button(messages.editButton());
         editButton.setStyleName("btn btn-default");
 
-        deleteButton = new Button("Delete");
+        deleteButton = new Button(messages.deleteButton());
         deleteButton.setStyleName("btn btn-default");
 
         findText = new TextBox();
         findText.setMaxLength(50);
         findText.setStyleName("form-control");
 
-        findButton = new Button("Find");
+        findButton = new Button(messages.findButton());
         findButton.setStyleName("btn btn-default");
 
         // Create the menu
@@ -114,7 +117,7 @@ public class CustomerView extends Composite implements CustomerPresenter.Display
         table = new CellTable<>();
         InitializeTable();
 
-        contentTable = new FlexTable();
+        FlexTable contentTable = new FlexTable();
         contentTable.setWidth("100%");
 //        contentTable.getCellFormatter().addStyleName(0, 0, "customers-ListContainer");
         contentTable.getCellFormatter().addStyleName(0, 0, "customers-ListMenu");
@@ -123,7 +126,7 @@ public class CustomerView extends Composite implements CustomerPresenter.Display
         contentTable.getCellFormatter().addStyleName(1, 0, "customers-ListMenu");
         contentTable.getCellFormatter().setWidth(1, 0, "100%");
         contentTable.getFlexCellFormatter().setVerticalAlignment(1, 0, DockPanel.ALIGN_TOP);
-        contentTable.setWidget(0, 0, new HTML("<h2>Customers</h2>"));
+        contentTable.setWidget(0, 0, new HTML("<h2>" + messages.customerList() + "</h2>"));
         contentTable.setWidget(1, 0, hPanel);
         contentTable.setWidget(2, 0, table);
 

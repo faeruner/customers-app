@@ -3,7 +3,7 @@ package by.netcracker.test.vad.customers.client.event;
 import com.google.gwt.event.shared.GwtEvent;
 
 public class EditCustomerEvent extends GwtEvent<EditCustomerEventHandler>{
-  public static Type<EditCustomerEventHandler> TYPE = new Type<EditCustomerEventHandler>();
+    public static final Type<EditCustomerEventHandler> TYPE = new Type<>();
   private final Integer id;
   
   public EditCustomerEvent(Integer id) {

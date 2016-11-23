@@ -31,7 +31,7 @@
     <jpa:repositories base-package="by.netcracker.test.vad.customers.repository" entity-manager-factory-ref="emf"
                       transaction-manager-ref="transactionManager"/>
 
-    <jdbc:initialize-database data-source="dataSource" enabled="false" ignore-failures="NONE">
+    <jdbc:initialize-database data-source="dataSource" enabled="${init-database-enable}" ignore-failures="ALL">
         <jdbc:script location="classpath:/sql/schema.sql"/>
         <jdbc:script location="classpath:/sql/data.sql"/>
     </jdbc:initialize-database>

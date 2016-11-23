@@ -9,7 +9,7 @@ import java.util.Date;
 public class Customer implements Serializable {
     @Id
     @SequenceGenerator(name = "customerSequence", sequenceName = "customers_seq")
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="customerSequence")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "customerSequence")
     @Column(name = "customer_id")
     private Integer id;
 
