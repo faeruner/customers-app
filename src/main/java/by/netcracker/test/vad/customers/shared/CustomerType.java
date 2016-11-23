@@ -7,7 +7,8 @@ import java.io.Serializable;
 @Table(name = "customer_types")
 public class CustomerType implements Serializable {
     @Id
-    @GeneratedValue
+    @SequenceGenerator(name = "customerTypeSequence", sequenceName = "customer_types_seq")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "customerTypeSequence")
     @Column(name = "customer_type_id")
     private Integer id;
 

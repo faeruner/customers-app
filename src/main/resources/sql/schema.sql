@@ -1,10 +1,9 @@
--- Table: public.customer_types
 DROP SEQUENCE public.customers_seq CASCADE;
-
+DROP SEQUENCE public.customer_types_seq CASCADE;
 DROP TABLE public.customers CASCADE;
-
 DROP TABLE public.customer_types CASCADE;
 
+-- Table: public.customer_types
 CREATE TABLE public.customer_types
 (
   customer_type_id      INTEGER NOT NULL,
@@ -20,11 +19,10 @@ ALTER TABLE public.customer_types
   OWNER TO postgres;
 
 -- Table: public.customers
-
 CREATE TABLE public.customers
 (
   customer_id          INTEGER NOT NULL,
-  title                CHARACTER VARYING(4) COLLATE pg_catalog."default",
+  title                CHARACTER VARYING(3) COLLATE pg_catalog."default",
   first_name           CHARACTER VARYING(50) COLLATE pg_catalog."default",
   last_name            CHARACTER VARYING(50) COLLATE pg_catalog."default",
   modified_when        TIMESTAMP WITH TIME ZONE,
@@ -47,10 +45,20 @@ ALTER TABLE public.customers
 
 CREATE SEQUENCE public.customers_seq
 INCREMENT 1
-START 2
+START 1
 MINVALUE 1
 MAXVALUE 9223372036854775807
 CACHE 1;
 
 ALTER SEQUENCE public.customers_seq
+OWNER TO postgres;
+
+CREATE SEQUENCE public.customer_types_seq
+INCREMENT 1
+START 10
+MINVALUE 1
+MAXVALUE 9223372036854775807
+CACHE 1;
+
+ALTER SEQUENCE public.customer_types_seq
 OWNER TO postgres;
