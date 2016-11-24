@@ -16,6 +16,7 @@ public class EditCustomerView extends Composite implements EditCustomerPresenter
     private final Messages messages = (Messages) GWT.create(Messages.class);
 
     private final TextBox title;
+    private final HorizontalPanel titlePanel;
     private final Label titleHelp;
 
     private final TextBox firstName;
@@ -39,6 +40,27 @@ public class EditCustomerView extends Composite implements EditCustomerPresenter
         title.setStyleName("form-control");
         titleHelp = new Label();
         titleHelp.addStyleName("alert-warning");
+
+        titlePanel = new HorizontalPanel();
+        titlePanel.setSpacing(8);
+        titlePanel.addStyleName("form-control");
+        String[] titles = messages.titleArray();
+        for (int i = 0; i < titles.length; i++) {
+            String titleCode = titles[i];
+            RadioButton radioButton = new RadioButton("title", titleCode);
+            radioButton.addStyleName("customers-HeaderContainer");
+            radioButton.ensureDebugId("rbtn-title-" + titleCode);
+            radioButton.setValue("".equals(title.getValue()) && i == 0 || titleCode.equals(title.getValue()));
+            radioButton.addClickHandler(clickEvent -> title.setValue(((RadioButton) clickEvent.getSource()).getText()));
+            titlePanel.add(radioButton);
+        }
+
+        title.addValueChangeHandler(changeEvent -> titlePanel.forEach(widget -> {
+            if (widget instanceof RadioButton) {
+                RadioButton btn = (RadioButton) widget;
+                btn.setValue(changeEvent.getValue().equals(btn.getText()));
+            }
+        }));
 
         firstName = new TextBox();
         firstName.setMaxLength(50);
@@ -112,7 +134,7 @@ public class EditCustomerView extends Composite implements EditCustomerPresenter
         int row = 0;
 
         detailsTable.setWidget(row, 0, new Label(messages.titleField()));
-        detailsTable.setWidget(row++, 1, title);
+        detailsTable.setWidget(row++, 1, titlePanel);
         detailsTable.setWidget(row++, 1, titleHelp);
 
         detailsTable.setWidget(row, 0, new Label(messages.firsNameField()));

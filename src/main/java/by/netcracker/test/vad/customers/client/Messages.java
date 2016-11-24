@@ -1,64 +1,70 @@
 package by.netcracker.test.vad.customers.client;
 
+import com.google.gwt.i18n.client.Constants;
+import com.google.gwt.i18n.client.LocalizableResource.DefaultLocale;
 import com.google.gwt.i18n.client.LocalizableResource.Generate;
 
+@DefaultLocale("en-US")
 @Generate(format = "com.google.gwt.i18n.server.PropertyCatalogFactory")
-public interface Messages extends com.google.gwt.i18n.client.Messages {
+public interface Messages extends Constants {
 
-  @DefaultMessage("Add")
+  @DefaultStringValue("Add")
   String addButton();
 
-  @DefaultMessage("Edit")
+  @DefaultStringValue("Edit")
   String editButton();
 
-  @DefaultMessage("Delete")
+  @DefaultStringValue("Delete")
   String deleteButton();
 
-  @DefaultMessage("Find")
+  @DefaultStringValue("Find")
   String findButton();
 
-  @DefaultMessage("Save")
+  @DefaultStringValue("Save")
   String saveButton();
 
-  @DefaultMessage("Cancel")
+  @DefaultStringValue("Cancel")
   String cancelButton();
 
-  @DefaultMessage("First Name")
+  @DefaultStringValue("First Name")
   String firsNameField();
 
-  @DefaultMessage("Last Name")
+  @DefaultStringValue("Last Name")
   String lastNameField();
 
-  @DefaultMessage("Title")
+  @DefaultStringValue("Title")
   String titleField();
 
-  @DefaultMessage("Modified When")
+  @DefaultStringValue("Modified When")
   String modifiedWhenField();
 
-  @DefaultMessage("Type")
+  @DefaultStringValue("Type")
   String typeField();
 
-  @DefaultMessage("Customer")
+  @DefaultStringValue("Customers")
   String customerList();
 
-  @DefaultMessage("Customer attributes")
+  @DefaultStringValue("Customer attributes")
   String customerEdit();
 
-  @DefaultMessage("Error fetching customers")
+  @DefaultStringValue("Error fetching customers")
   String fetchingError();
 
-  @DefaultMessage("Error deleting customer")
+  @DefaultStringValue("Error deleting customer")
   String deletingError();
 
-  @DefaultMessage("Error retrieving customer")
+  @DefaultStringValue("Error retrieving customer")
   String retrievingError();
 
-  @DefaultMessage("Error updating customer")
+  @DefaultStringValue("Error updating customer")
   String updatingError();
 
-  @DefaultMessage("Value is empty!")
+  @DefaultStringValue("Value is empty!")
   String emptyValueWarning();
 
-  @DefaultMessage("Only letters is allowed!")
+  @DefaultStringValue("Only letters is allowed!")
   String lettersValueWarning();
+
+  @DefaultStringArrayValue({"Mr", "Ms", "Mrs", "Dr"})
+  String[] titleArray();
 }
